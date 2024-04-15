@@ -32,8 +32,8 @@ jobs:
       - name: Get file contents
         id: get_file
         run: |
-          FILE_CONTENTS=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" -L "https://api.github.com/repos/${{ github.repository }}/contents/${{ steps.vars.outputs.FILE_PATH }}?ref=${{ github.event.pull_request.head.ref }}")
-          echo "::set-output name=FILE_CONTENTS::$FILE_CONTENTS"
+          FILE_CONTENTS=$(curl -s --raw -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" -L "https://api.github.com/repos/${{ github.repository }}/contents/${{ steps.vars.outputs.FILE_PATH }}?ref=${{ github.event.pull_request.head.ref }}")
+          echo "::set-output name=FILE_CONTENTS::$(echo "$FILE_CONTENTS" | base64)"
 
       - name: Send response to backend
         run: |
