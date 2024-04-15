@@ -1,13 +1,12 @@
 name: PR Comment Trigger
 
 on:
-    issue_comment:
+  pull_request_review_comment:
         types: [created]
 
 jobs:
     check_pr_comment:
         runs-on: ubuntu-latest
-        if: github.event.issue.pull_request
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
@@ -19,15 +18,31 @@ jobs:
               run: |
                 echo "::set-output name=COMMENT_BODY::${{ github.event.comment.body }}"
                 echo "::set-output name=COMMENT_URL::${{ github.event.comment.html_url }}"
-                echo "::set-output name=PR_URL::${{ github.event.issue.pull_request.url }}"
+                echo "::set-output name=PR_URL::${{ github.event.pull_request.html_url }}"
+                echo "::set-output name=REPO::${{ github.repository }}"
+                echo "::set-output name=PR_NUMBER::${{ github.event.pull_request.number }}"
+                echo "::set-output name=PR_TITLE::${{ github.event.pull_request.title }}"
+                echo "::set-output name=PR_BODY::${{ github.event.pull_request.body }}"
+                echo "::set-output name=PR_AUTHOR::${{ github.event.pull_request.user.login }}"
+                echo "::set-output name=FILE_PATH::${{ github.event.comment.path }}"
+                echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
+                echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
 
             - name: send response to backend
               run: |
                 curl -X POST 'https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr' \
                 -H 'Content-Type: application/json' \
                 -d '{
-                  "comment_body": "'"${{ steps.vars.outputs.COMMENT_BODY }}"'",
-                  "comment_url": "'"${{ steps.vars.outputs.COMMENT_URL }}"'",
-                  "pr_url": "'"${{ steps.vars.outputs.PR_URL }}"'"
+                    "comment_body": "${{ steps.vars.outputs.COMMENT_BODY }}",
+                    "comment_url": "${{ steps.vars.outputs.COMMENT_URL }}",
+                    "pr_url": "${{ steps.vars.outputs.PR_URL }}",
+                    "repo": "${{ steps.vars.outputs.REPO }}",
+                    "pr_number": "${{ steps.vars.outputs.PR_NUMBER }}",
+                    "pr_title": "${{ steps.vars.outputs.PR_TITLE }}",
+                    "pr_body": "${{ steps.vars.outputs.PR_BODY }}",
+                    "pr_author": "${{ steps.vars.outputs.PR_AUTHOR }}",
+                    "file_path": "${{ steps.vars.outputs.FILE_PATH }}",
+                    "file_line": "${{ steps.vars.outputs.FILE_LINE }}",
+                    "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}"
                 }'
 
