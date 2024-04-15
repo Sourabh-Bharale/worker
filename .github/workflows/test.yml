@@ -19,7 +19,22 @@ jobs:
                 COMMENT_BODY="${{github.event.comment.body}}"
                 COMMENT_URL="${{github.event.comment.html_url}}"
                 PR_URL="${{github.event.issue.pull_request.url}}"
-                echo "Comment Body: $COMMENT_BODY"
-                echo "Comment URL: $COMMENT_URL"
-                echo "PR URL: $PR_URL"
+
+            - name: send response to backend
+              run: |
+                const payload = {
+                    comment_body: COMMENT_BODY,
+                    comment_url: COMMENT_URL,
+                    pr_url: PR_URL
+                }
+                const response = await fetch('https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr',{
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                if(!response.ok){
+                    throw new Error('Failed to send response to backend')
+                }
 
