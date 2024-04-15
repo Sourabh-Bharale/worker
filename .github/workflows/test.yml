@@ -25,7 +25,7 @@ jobs:
                 echo "::set-output name=PR_BODY::${{ github.event.pull_request.body }}"
                 echo "::set-output name=PR_AUTHOR::${{ github.event.pull_request.user.login }}"
                 echo "::set-output name=FILE_PATH::${{ github.event.comment.path }}"
-                echo "::set-output name=FILE_URL::${{ github.event.comment.html_url }}"
+                echo "::set-output name=FILE_URL::${{ github.event.repository.html_url }}/blob/${{ github.event.pull_request.head.ref }}/${{ github.event.comment.path }}"
                 echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
                 echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
 
