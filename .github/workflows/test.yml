@@ -28,6 +28,11 @@ jobs:
                 echo "::set-output name=FILE_URL::${{ github.event.repository.html_url }}/blob/${{ github.event.pull_request.head.ref }}/${{ github.event.comment.path }}"
                 echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
                 echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
+            - name: Get file contents
+              id: get_file
+              run: |
+                FILE_CONTENTS=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" -L "${{ steps.vars.outputs.FILE_URL }}")
+                echo "::set-output name=FILE_CONTENTS::$FILE_CONTENTS"
 
             - name: send response to backend
               run: |
@@ -45,6 +50,7 @@ jobs:
                     "file_path": "${{ steps.vars.outputs.FILE_PATH }}",
                     "file_url": "${{ steps.vars.outputs.FILE_URL }}",
                     "file_line": "${{ steps.vars.outputs.FILE_LINE }}",
-                    "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}"
+                    "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}",
+                    "file_contents": "${{ steps.get_file.outputs.FILE_CONTENTS }}"
                 }'
 
