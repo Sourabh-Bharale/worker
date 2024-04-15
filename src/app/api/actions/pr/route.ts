@@ -8,6 +8,7 @@ export async function POST(req: any, res: any) {
         pr_body,
         pr_author,
         file_path,
+        file_url,
         file_line,
         diff_hunk } = await req.json();
     console.log({
@@ -20,6 +21,7 @@ export async function POST(req: any, res: any) {
         pr_body,
         pr_author,
         file_path,
+        file_url,
         file_line,
         diff_hunk
     })
