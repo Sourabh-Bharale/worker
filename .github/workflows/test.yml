@@ -12,21 +12,22 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: Run Action
+            - name: set output variables
+              id: vars
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                COMMENT_BODY="${{github.event.comment.body}}"
-                COMMENT_URL="${{github.event.comment.html_url}}"
-                PR_URL="${{github.event.issue.pull_request.url}}"
+                echo "::set-output name=COMMENT_BODY::${{ github.event.comment.body }}"
+                echo "::set-output name=COMMENT_URL::${{ github.event.comment.html_url }}"
+                echo "::set-output name=PR_URL::${{ github.event.issue.pull_request.url }}"
 
             - name: send response to backend
               run: |
                 curl -X POST 'https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr' \
                 -H 'Content-Type: application/json' \
                 -d '{
-                  "comment_body": "'"$COMMENT_BODY"'",
-                  "comment_url": "'"$COMMENT_URL"'",
-                  "pr_url": "'"$PR_URL"'"
+                  "comment_body": "'"${{ steps.vars.outputs.COMMENT_BODY }}"'",
+                  "comment_url": "'"${{ steps.vars.outputs.COMMENT_URL }}"'",
+                  "pr_url": "'"${{ steps.vars.outputs.PR_URL }}"'"
                 }'
 
