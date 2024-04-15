@@ -2,55 +2,55 @@ name: PR Comment Trigger
 
 on:
   pull_request_review_comment:
-        types: [created]
+    types: [created]
 
 jobs:
-    check_pr_comment:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+  check_pr_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: set output variables
-              id: vars
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                echo "::set-output name=COMMENT_BODY::${{ github.event.comment.body }}"
-                echo "::set-output name=COMMENT_URL::${{ github.event.comment.html_url }}"
-                echo "::set-output name=PR_URL::${{ github.event.pull_request.html_url }}"
-                echo "::set-output name=REPO::${{ github.repository }}"
-                echo "::set-output name=PR_NUMBER::${{ github.event.pull_request.number }}"
-                echo "::set-output name=PR_TITLE::${{ github.event.pull_request.title }}"
-                echo "::set-output name=PR_BODY::${{ github.event.pull_request.body }}"
-                echo "::set-output name=PR_AUTHOR::${{ github.event.pull_request.user.login }}"
-                echo "::set-output name=FILE_PATH::${{ github.event.comment.path }}"
-                echo "::set-output name=FILE_URL::${{ github.event.repository.html_url }}/blob/${{ github.event.pull_request.head.ref }}/${{ github.event.comment.path }}"
-                echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
-                echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
-            - name: Get file contents
-              id: get_file
-              run: |
-                FILE_CONTENTS=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" -L "${{ steps.vars.outputs.FILE_URL }}")
-                echo "::set-output name=FILE_CONTENTS::$FILE_CONTENTS"
+      - name: Set output variables
+        id: vars
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::set-output name=COMMENT_BODY::${{ github.event.comment.body }}"
+          echo "::set-output name=COMMENT_URL::${{ github.event.comment.html_url }}"
+          echo "::set-output name=PR_URL::${{ github.event.pull_request.html_url }}"
+          echo "::set-output name=REPO::${{ github.repository }}"
+          echo "::set-output name=PR_NUMBER::${{ github.event.pull_request.number }}"
+          echo "::set-output name=PR_TITLE::${{ github.event.pull_request.title }}"
+          echo "::set-output name=PR_BODY::${{ github.event.pull_request.body }}"
+          echo "::set-output name=PR_AUTHOR::${{ github.event.pull_request.user.login }}"
+          echo "::set-output name=FILE_PATH::${{ github.event.comment.path }}"
+          echo "::set-output name=FILE_URL::${{ github.event.repository.html_url }}/blob/${{ github.event.pull_request.head.ref }}/${{ github.event.comment.path }}"
+          echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
+          echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
 
-            - name: send response to backend
-              run: |
-                curl -X POST 'https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr' \
-                -H 'Content-Type: application/json' \
-                -d '{
-                    "comment_body": "${{ steps.vars.outputs.COMMENT_BODY }}",
-                    "comment_url": "${{ steps.vars.outputs.COMMENT_URL }}",
-                    "pr_url": "${{ steps.vars.outputs.PR_URL }}",
-                    "repo": "${{ steps.vars.outputs.REPO }}",
-                    "pr_number": "${{ steps.vars.outputs.PR_NUMBER }}",
-                    "pr_title": "${{ steps.vars.outputs.PR_TITLE }}",
-                    "pr_body": "${{ steps.vars.outputs.PR_BODY }}",
-                    "pr_author": "${{ steps.vars.outputs.PR_AUTHOR }}",
-                    "file_path": "${{ steps.vars.outputs.FILE_PATH }}",
-                    "file_url": "${{ steps.vars.outputs.FILE_URL }}",
-                    "file_line": "${{ steps.vars.outputs.FILE_LINE }}",
-                    "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}",
-                    "file_contents": "${{ steps.get_file.outputs.FILE_CONTENTS }}"
-                }'
+      - name: Get file contents
+        id: get_file
+        run: |
+          FILE_CONTENTS=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" -L "https://api.github.com/repos/${{ github.repository }}/contents/${{ steps.vars.outputs.FILE_PATH }}?ref=${{ github.event.pull_request.head.ref }}")
+          echo "::set-output name=FILE_CONTENTS::$FILE_CONTENTS"
 
+      - name: Send response to backend
+        run: |
+          curl -X POST 'https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr' \
+          -H 'Content-Type: application/json' \
+          -d '{
+            "comment_body": "${{ steps.vars.outputs.COMMENT_BODY }}",
+            "comment_url": "${{ steps.vars.outputs.COMMENT_URL }}",
+            "pr_url": "${{ steps.vars.outputs.PR_URL }}",
+            "repo": "${{ steps.vars.outputs.REPO }}",
+            "pr_number": "${{ steps.vars.outputs.PR_NUMBER }}",
+            "pr_title": "${{ steps.vars.outputs.PR_TITLE }}",
+            "pr_body": "${{ steps.vars.outputs.PR_BODY }}",
+            "pr_author": "${{ steps.vars.outputs.PR_AUTHOR }}",
+            "file_path": "${{ steps.vars.outputs.FILE_PATH }}",
+            "file_url": "${{ steps.vars.outputs.FILE_URL }}",
+            "file_line": "${{ steps.vars.outputs.FILE_LINE }}",
+            "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}",
+            "file_contents": "${{ steps.get_file.outputs.FILE_CONTENTS }}"
+          }'
