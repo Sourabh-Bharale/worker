@@ -22,19 +22,11 @@ jobs:
 
             - name: send response to backend
               run: |
-                const payload = {
-                    comment_body: COMMENT_BODY,
-                    comment_url: COMMENT_URL,
-                    pr_url: PR_URL
-                }
-                const response = await fetch('https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr',{
-                    method: 'POST',
-                    headers:{
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                })
-                if(!response.ok){
-                    throw new Error('Failed to send response to backend')
-                }
+                curl -X POST 'https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr' \
+                -H 'Content-Type: application/json' \
+                -d '{
+                  "comment_body": "'"$COMMENT_BODY"'",
+                  "comment_url": "'"$COMMENT_URL"'",
+                  "pr_url": "'"$PR_URL"'"
+                }'
 
