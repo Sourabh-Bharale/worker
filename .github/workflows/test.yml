@@ -1,0 +1,25 @@
+name: PR Comment Trigger
+
+on:
+    issue_comment:
+        types: [created]
+
+jobs:
+    check_pr_comment:
+        runs-on: ubuntu-latest
+        if: github.event.issue.pull_request
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Run Action
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                COMMENT_BODY="${{github.event.comment.body}}"
+                COMMENT_URL="${{github.event.comment.html_url}}"
+                PR_URL="${{github.event.issue.pull_request.url}}"
+                echo "Comment Body: $COMMENT_BODY"
+                echo "Comment URL: $COMMENT_URL"
+                echo "PR URL: $PR_URL"
+
