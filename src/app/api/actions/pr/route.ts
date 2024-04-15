@@ -29,11 +29,6 @@ export async function POST(req: any, res: any) {
         file_contents,
         diff_hunk
     })
-    // const file = await fetch(file_url)
-    // const buffer = await file.arrayBuffer()
-    // fs.writeFile(path.resolve('./',path.basename(file_url)),Buffer.from(buffer),()=>{
-    //     console.log('file saved')
-    // })
 
     return new Response(JSON.stringify({ message: 'success' }), { status: 200 })
 }
