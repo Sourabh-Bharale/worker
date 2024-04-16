@@ -39,18 +39,15 @@ jobs:
         run: |
           res=$(curl "https://raw.githubusercontent.com/$REPO/$BRANCH/$FILE_PATH" \
           -H "Authorization: bearer $GITHUB_TOKEN" )
-          res="${res//$'\n'/\\n}"
-          res="${res//\"/\\\"}"
-          res="${res//\\/\\\\}"
-          res="${res//$'\b'/\\b}"
-          res="${res//$'\f'/\\f}"
-          res="${res//$'\r'/\\r}"
-          res="${res//$'\t'/\\t}"
-          echo "::set-output name=FILE_CONTENTS::${res}"
-
-      - name: Print outputs
-        run: |
-         echo "file_contents: ${{ steps.get_file.outputs.FILE_CONTENTS }}"
+            res="${res//$'\n'/\\n}"
+            res="${res//\"/\\\"}"
+            res="${res//\\/\\\\}"
+            res="${res//$'\b'/\\b}"
+            res="${res//$'\f'/\\f}"
+            res="${res//$'\r'/\\r}"
+            res="${res//$'\t'/\\t}"
+            res="$(echo -n "$res" | jq -aR .)"
+            echo "::set-output name=FILE_CONTENTS::$res"
 
       - name: Send response to backend
         run: |

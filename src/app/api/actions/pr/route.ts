@@ -15,6 +15,7 @@ export async function POST(req: any, res: any) {
         file_contents,
         branch,
         diff_hunk } = await req.json();
+        const decodedFileContent = decodeURIComponent(file_contents);
     console.log({
         comment_body,
         comment_url,
@@ -27,10 +28,10 @@ export async function POST(req: any, res: any) {
         file_path,
         file_url,
         file_line,
-        file_contents,
+        file_contents:decodedFileContent,
         branch,
         diff_hunk
     })
-    
+
     return new Response(JSON.stringify({ message: 'success' }), { status: 200 })
 }
