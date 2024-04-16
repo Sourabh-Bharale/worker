@@ -31,6 +31,5 @@ export async function POST(req: any, res: any) {
         branch,
         diff_hunk
     })
-
     return new Response(JSON.stringify({ message: 'success' }), { status: 200 })
 }
