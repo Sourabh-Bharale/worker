@@ -31,9 +31,14 @@ jobs:
           echo "::set-output name=BRANCH::${{ github.event.pull_request.head.ref}}"
       - name: Get file contents
         id: get_file
+        env:
+          REPO: ${{ steps.vars.outputs.REPO }}
+          BRANCH: ${{ steps.vars.outputs.BRANCH }}
+          FILE_PATH: ${{ steps.vars.outputs.FILE_PATH }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          res=$(curl 'https://raw.githubusercontent.com/${{ steps.vars.outputs.REPO}}/${{steps.vars.outputs.BRANCH}}/${{steps.vars.outputs.FILE_PATH}}' \
-          -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" )
+          res=$(curl "https://raw.githubusercontent.com/$REPO/$BRANCH/$FILE_PATH" \
+          -H "Authorization: bearer $GITHUB_TOKEN" )
           echo "::set-output name=FILE_CONTENTS::${res}"
 
 
