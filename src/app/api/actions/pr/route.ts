@@ -13,6 +13,7 @@ export async function POST(req: any, res: any) {
         file_url,
         file_line,
         file_contents,
+        branch,
         diff_hunk } = await req.json();
     console.log({
         comment_body,
@@ -27,6 +28,7 @@ export async function POST(req: any, res: any) {
         file_url,
         file_line,
         file_contents,
+        branch,
         diff_hunk
     })
 
