@@ -60,5 +60,5 @@ jobs:
             "file_line": "${{ steps.vars.outputs.FILE_LINE }}",
             "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}",
             "file_contents": "${{ steps.get_file.outputs.FILE_CONTENTS }}",
-            "branch": "${{ steps.vars.outputs.BRANCH }}
+            "branch": "${{ steps.vars.outputs.BRANCH }}"
           }'
