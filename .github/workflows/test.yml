@@ -32,7 +32,7 @@ jobs:
       - name: Get file contents
         id: get_file
         run: |
-          res = (curl 'https://raw.githubusercontent.com/${{ steps.vars.outputs.REPO}}/${{steps.vars.outputs.BRANCH}}/${{steps.vars.outputs.FILE_PATH}}'
+          res = $(curl 'https://raw.githubusercontent.com/${{ steps.vars.outputs.REPO}}/${{steps.vars.outputs.BRANCH}}/${{steps.vars.outputs.FILE_PATH}}' \
           -H "Authorization: bearer $GITHUB_TOKEN" )
           echo "::set-output name=FILE_CONTENTS::${res}"
 
