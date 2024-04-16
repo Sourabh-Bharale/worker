@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path';
 export async function POST(req: any, res: any) {
     const { comment_body,
         comment_url,
