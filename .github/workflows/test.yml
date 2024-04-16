@@ -39,6 +39,13 @@ jobs:
         run: |
           res=$(curl "https://raw.githubusercontent.com/$REPO/$BRANCH/$FILE_PATH" \
           -H "Authorization: bearer $GITHUB_TOKEN" )
+          res="${res//$'\n'/\\n}"
+          res="${res//\"/\\\"}"
+          res="${res//\\/\\\\}"
+          res="${res//$'\b'/\\b}"
+          res="${res//$'\f'/\\f}"
+          res="${res//$'\r'/\\r}"
+          res="${res//$'\t'/\\t}"
           echo "::set-output name=FILE_CONTENTS::${res}"
 
 
