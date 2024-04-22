@@ -12,9 +12,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
+
         </a>
         <a
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"

@@ -29,6 +29,11 @@ jobs:
           echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
           echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
           echo "::set-output name=BRANCH::${{ github.event.pull_request.head.ref}}"
+
+      - name: Calculate line Number
+        run: |
+          echo "FILE_LINE=$(node calculateLineNumber.js '${{ steps.vars.outputs.DIFF_HUNK}}' '${{ steps.vars.outputs.FILE_LINE}}')" >> $GITHUB_ENV
+
       - name: Get file contents
         id: get_file
         env:
@@ -56,7 +61,7 @@ jobs:
             "pr_author": "${{ steps.vars.outputs.PR_AUTHOR }}",
             "file_path": "${{ steps.vars.outputs.FILE_PATH }}",
             "file_url": "${{ steps.vars.outputs.FILE_URL }}",
-            "file_line": "${{ steps.vars.outputs.FILE_LINE }}",
+            "file_line": "${{ env.FILE_LINE }}",
             "diff_hunk": "${{ steps.vars.outputs.DIFF_HUNK }}",
             "file_contents": "${{ steps.get_file.outputs.FILE_CONTENTS }}",
             "branch": "${{ steps.vars.outputs.BRANCH }}"
