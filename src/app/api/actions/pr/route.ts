@@ -19,6 +19,7 @@ export async function POST(req: any, res: any) {
 
     const lineNumber = calculateLineNumber(diff_hunk, parseInt(file_line,10));
     console.log({lineNumber})
+    
 
     // const prompt = ChatPromptTemplate.fromMessages([
     //     ["system", process.env.SYSTEM_PROMPT_TEMPLATE!],
