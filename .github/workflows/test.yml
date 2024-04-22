@@ -29,7 +29,6 @@ jobs:
           echo "::set-output name=FILE_LINE::${{ github.event.comment.position }}"
           echo "::set-output name=DIFF_HUNK::${{ github.event.comment.diff_hunk }}"
           echo "::set-output name=BRANCH::${{ github.event.pull_request.head.ref}}"
-
       - name: Get file contents
         id: get_file
         env:
@@ -41,7 +40,6 @@ jobs:
           res=$(curl "https://raw.githubusercontent.com/$REPO/$BRANCH/$FILE_PATH" \
           -H "Authorization: bearer $GITHUB_TOKEN" )
           echo "::set-output name=FILE_CONTENTS::$res"
-
       - name: Send response to backend
         run: |
           curl -X POST 'https://008vv400-3000.inc1.devtunnels.ms/api/actions/pr' \
