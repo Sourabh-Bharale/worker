@@ -17,8 +17,8 @@ export async function POST(req: any, res: any) {
 
     console.log({ comment_body, comment_url, pr_url, repo, pr_number, pr_title, pr_body, pr_author, file_path, file_url, fileContent, file_line, branch, diff_hunk });
 
-    // const lineNumber = calculateLineNumber(diff_hunk, parseInt(file_line,10));
-    // console.log({lineNumber})
+    const lineNumber = calculateLineNumber(diff_hunk, parseInt(file_line,10));
+    console.log({lineNumber})
 
 
     // const prompt = ChatPromptTemplate.fromMessages([
