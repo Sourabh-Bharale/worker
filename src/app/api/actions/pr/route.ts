@@ -20,7 +20,7 @@ export async function POST(req: any, res: any) {
 
     const prompt = ChatPromptTemplate.fromMessages([
         ["system", process.env.SYSTEM_PROMPT_TEMPLATE!],
-        ["user",process.env.USER_PROMPT_TEMPLATE!],
+        ["user", process.env.USER_PROMPT_TEMPLATE!],
     ])
 
     const model = new ChatOpenAI({
