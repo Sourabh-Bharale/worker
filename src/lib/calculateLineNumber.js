@@ -1,4 +1,4 @@
-function calculateLineNumber(diffHunk, position) {
+export function calculateLineNumber(diffHunk, position) {
     const lines = diffHunk.split('\n');
     let currentLine = 0;
     for (let i = 0; i < lines.length; i++) {
@@ -17,11 +17,3 @@ function calculateLineNumber(diffHunk, position) {
     }
     return null;
   }
-  
-  // Read the diff hunk and position from the command line arguments
-  const diffHunk = process.argv[2];
-  const position = parseInt(process.argv[3], 10);
-
-  // Calculate the line number and print it to the console
-  const lineNumber = calculateLineNumber(diffHunk, position);
-  console.log(lineNumber);
